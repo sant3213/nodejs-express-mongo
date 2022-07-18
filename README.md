@@ -125,3 +125,23 @@ To get an array of data
 	   }) 
     %>
  ```
+
+ **8.** **Routing**
+
+ To handles all the routing neccesary for everything that falls under sessions you have to build a sessionRouter with:
+```js script
+ const sessionRouter = express().Router();
+  ```
+To use it
+```js script
+sessionsRouter.route('/').get((req, res)=> {
+  res.send()
+  // or res.render() to render the page
+})
+  ```
+To pass in parameter values in the URL use /:<*parameterName*>
+```js script
+sessionsRouter.route('/:id').get((req, res)=> {
+  console.log(id)
+})
+ ```
