@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const app = express();
 const path = require('path');
 const sessionsRouter = require('./src/routers/sessionRouter');
+const adminRouter = require('./src/routers/adminRouter');
 const PORT = process.env.PORT || 3000;
 
 app.use(morgan('tiny'));
@@ -16,6 +17,7 @@ app.set('view engine', 'ejs');
 
 
 app.use('/sessions', sessionsRouter);
+app.use('/admin', adminRouter);
 
 app.get('/',(req, res)=>{
     res.render('index', {title: ' Surymantics', data: ['First','Second','Third']})

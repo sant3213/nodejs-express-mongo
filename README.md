@@ -30,7 +30,7 @@ npm i morgan
  app.use(morgan('tiny'));
   ```
 
-**5.** NPM Scripts
+**6.** NPM Scripts
 &nbsp;&nbsp;&nbsp; Modify the package.json "scripts" and add
  ```js script
 
@@ -50,7 +50,7 @@ npm run test
 npm start
  ```
 
- **6.** Nodemon is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
+ **7.** Nodemon is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
 
 ```js script
 npm install nodemon
@@ -72,7 +72,7 @@ npm install nodemon
     "debug":"set DEBUG=* & nodemon app.js",
  ```
 
-  **6.** Environmental Variables 
+  **8.** Environmental Variables 
   &nbsp;&nbsp;&nbsp; Add the following script to the nodemonConfig in the package.json: 
 ```js script
   "env": {
@@ -80,7 +80,7 @@ npm install nodemon
     }
 ```
 
-**7.** **Templating Engines**
+**9.** **Templating Engines**
 It´s going to allow us to render an HTML page, but at the same time, embedding data into that page to make it **dynamic**
 
 ```js script
@@ -126,7 +126,7 @@ To get an array of data
     %>
  ```
 
- **8.** **Routing**
+ **10.** **Routing**
 
  To handles all the routing neccesary for everything that falls under sessions you have to build a sessionRouter with:
 ```js script
@@ -145,3 +145,31 @@ sessionsRouter.route('/:id').get((req, res)=> {
   console.log(id)
 })
  ```
+
+ **10.** **Connecting to MongoDB Locally**
+
+```js script
+ const { MongoClient } = require('mongodb'); //Object Destructuring
+
+ const url = 'mongodb://localhost:27017';
+ const dbName = 'expressDb';
+
+ sessionsRouter.route('/').get((req, res)=> {
+    (async function mongo() {
+        let client;
+        try {
+    
+            client = await MongoClient.connect(url);
+            debug('Connected to the mongo DB');
+
+            const db = client.db(dbName);
+            const response = await db.collection('sessions').insertMany(sessions);
+            res.json(response);
+        } catch (error) {
+            debug(error.stack);
+        } 
+        client.close();
+    })();
+})
+
+  ```
