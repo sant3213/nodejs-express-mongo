@@ -173,3 +173,8 @@ sessionsRouter.route('/:id').get((req, res)=> {
 })
 
   ```
+
+  **11.** **Security**
+```js script
+  npm i passport cookie-parser express-session passport-local
+  ```
