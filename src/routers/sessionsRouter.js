@@ -1,6 +1,7 @@
 const express = require("express");
 const debug = require("debug")("app:sessionRouter");
 const { MongoClient, ObjectId } = require("mongodb");
+const speakerService = require('../services/speakerService');
 
 const sessionsRouter = express.Router();
 sessionsRouter.use((req, res, next) => {
@@ -55,6 +56,9 @@ sessionsRouter.route("/:id").get((req, res) => {
         .collection('sessions')
         .findOne({ _id: myId });
         
+      const speaker = await speakerService.getSpeakerById(session.speakers[0]);
+
+      session.speaker = speaker.data;
       res.render('session', {
         session,
       });

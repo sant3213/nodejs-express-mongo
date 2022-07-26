@@ -173,6 +173,119 @@ sessionsRouter.route('/:id').get((req, res)=> {
 })
 
   ```
+**Queries**
+
+  ```js script
+
+db.collection('persons')
+.find({name:"Sant"})
+
+  ```
+
+
+
+   *Comparison Operators*
+
+  ```js script
+$eq: Equal            $gt: greater than                  $lt: Less than
+$ne: not equal        $gte: Greater than or equal        $lte: Less than or equal
+
+/*$and: Logically combines multiple conditions. Resulting documents must match ALL conditions. */
+{ $and: [{<condition1>}, [{<condition2>}...}]} 
+{ $and: [{"gender": "male"}, [{"age": 25}]}
+
+/*When the query has the same field we use Explicit $and. If we don´t use $and and the query has the same fields the first condition will be overwritten by the second one.*/
+    - With <strong>Explicit</strong> $and ===> { $and: [{"age": {"$ne": 25}}, {"age": {"$gte": 20}} ]}
+    - With **Implicit** $and ===> {"age": {"$ne": 25}}, {"age": {"$gte": 20}}: The first condition will be overwritten.
+
+/*In the following query I can use implicit AND because fields are different or I can even use explicit as well*/
+    db.collection('persons')
+    .find({gender: "female", favoriteFruit: "banana"})
+
+/*$or: Logically combines multiple conditions. Resulting documents must match ANY of the conditions*/
+{ $or: [{<condition1>}, [{<condition2>}...}]} 
+{ $or: [{"gender": "male"}, [{"age": 25}]} => Same as : {"age": {"$in": [20,27]}}
+
+db.getCollection('persons')
+.find({$or: [{eyeColor: "green"}, {eyeColor: "blue"}]}) /*==> a better approach for the queries with the same field would be the following:*/
+
+db.getCollection('persons')
+.find({eyeColor: {$in: ["green","blue"]) 
+
+
+db.collection('persons')
+.find({"eyeColor": {"$ne": "green"}}) //persons with color not equal to green
+
+db.collection('persons')
+.find({"age": {"$gt": 25}}) // persons with age greater than 25
+
+db.collection('persons')
+.find({"age": {"$gte": 25, "$lte": 30}}) // persons with age greater or equal than 25 AND less or equal to 35. The comma is AND
+
+db.collection('persons')
+.find({"name": {"$gt": "N"}})
+.sort({"name": 1}) // persons with name with at least N in alphabetical order
+
+
+  ```
+
+   *$in and $nin Operators*
+
+  ```js script
+/*$in operator is used to include more than one condition in an array. "$in": [21,21] meaning that the result should have 21 or 22*/
+
+db.collection('persons')
+.find({"age": {"$in": [21, 22]}}) //persons with age 21 or 22
+
+db.collection('persons')
+.find({"age": {"$nin": [21, 22]}}) //persons who aren´t 21 or 22
+
+
+  ```
+
+  *Query for Embedded Documents*
+
+  ```js script
+"company": {
+    "title":"SHEPARD",
+    "email":"sdasd@gmail.com",
+    "location":{
+      "country":"USA",
+      "address": "379 Tabor Court"
+    }
+}
+// Use dot notation. it has to be used with quotes.
+{"company.title":"SHEPARD"}
+{"company.location.address": "379 Tabor Court"}
+  
+  db.getCollection('persons')
+  .find({"company.location.country":"USA"})
+  ```
+
+ *Query Arrays by Specific Value*
+
+  ```js script
+  "tags": [
+    "enim",
+    "id",
+    "velit",
+    "ad",
+    "consequat"
+  ]
+
+  db.getCollection('persons')
+  .find({"tags.0":"ad"}) // Finds the tags with the "ad" in position 0 of tags
+
+  ```
+
+
+    *Helpers*
+
+  ```js script
+count()
+sort({"name": 1}) // Ascending order
+
+  ```
 
   **11.** **Security**
 ```js script
